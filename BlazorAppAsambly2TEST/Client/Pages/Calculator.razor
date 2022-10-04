@@ -1,0 +1,38 @@
+﻿<h3>Calculator</h3>
+@page "/Calculator"
+@using BlazorAppAsambly2TEST.Shared
+@inject HttpClient Http
+@using System.Text.Json;
+
+<EditForm Model="@opera" OnSubmit="HandledValidSubmit">
+
+    <InputNumber @bind-Value="opera.NumeroA"></InputNumber>
+    <InputNumber @bind-Value="opera.NumeroB"></InputNumber>
+    <label>Resultado: @opera.Res</label>
+    <InputSelect @bind-Value="opera.OperacionAritmetica">
+        <option value="">Seleccione operacion</option>
+        <option value="suma">Suma</option>
+        <option value="resta">Resta</option>
+        <option value="multiplicacion">Multiplicacion</option>
+        <option value="division">Division</option>
+    </InputSelect>
+    <button type="submit">Enviar datos</button>
+</EditForm>
+
+@code {
+        operaciones opera = new operaciones();
+        public async void HandledValidSubmit()
+        {
+            string json = JsonSerializer.Serialize(opera);
+
+            HttpResponseMessage response =
+            await Http.PostAsJsonAsync("op", opera);
+
+            if (response.IsSuccessStatusCode)
+            {
+               opera = await response.Content.ReadFromJsonAsync<operaciones>();
+            }else{
+
+            }
+    }
+}

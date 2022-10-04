@@ -1,0 +1,44 @@
+﻿<h3>Products</h3>
+@page "/Products"
+@inject HttpClient Http
+@using BlazorAppAsambly2TEST.Shared
+
+@if (products == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Cantidad</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Product producto in products)
+            {
+                <tr>
+                    <td>@producto.Id</td>
+                    <td>@producto.Name</td>
+                    <td>@producto.Price</td>
+                    <td>@producto.Quantity</td>
+                    <td>@producto.Description</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+@code {
+    private Product[] products;
+
+    protected override async Task OnInitializedAsync()
+    {
+        products = await Http.GetFromJsonAsync<Product[]>("api/Product");
+    }
+
+}
